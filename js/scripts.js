@@ -140,10 +140,12 @@ function draw(){
         .on("mouseover", function(d){
           d3.select(this)
               .style("stroke-opacity", opacity.mouseover)
+              .moveToFront();
         })
         .on("mouseout", function(d){
           d3.selectAll(".link")
               .style("stroke-opacity", opacity.mouseout)
+              .moveToBack();
         })
 
     // add the link titles
@@ -224,11 +226,13 @@ function draw(){
         })[0].type;
 
         d3.selectAll(".link." + slugify(d.name))
-            .style("stroke-opacity", opacity.mouseover);
+            .style("stroke-opacity", opacity.mouseover)
+            .moveToFront();
       })
       .on("mouseout", function(d){
         d3.selectAll(".link")
-            .style("stroke-opacity", opacity.mouseout);
+            .style("stroke-opacity", opacity.mouseout)
+            .moveToBack();
       });
 
     // the function for moving the nodes
