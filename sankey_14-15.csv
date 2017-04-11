@@ -1,0 +1,63 @@
+source,target,value,recipient_type
+Bajaj Electoral Trust,Aam Aadmi Party,30000000,party
+General Electoral Trust,Bharatiya Janata Party,632000000,party
+General Electoral Trust,Biju Janata Dal,100000000,party
+General Electoral Trust,Indian National Congress,541000000,party
+General Electoral Trust,Jharkhand Mukti Morcha,7500000,party
+General Electoral Trust,Maharashtra Navnirman Sena,15000000,party
+General Electoral Trust,Shiv Sena,20000000,party
+Janpragati Electoral Trust,Indian National Congress,30000000,party
+Janpragati Electoral Trust,Shiv Sena,10000000,party
+Progressive Electoral Trust,All India Trinamool Congress,15384115,party
+Progressive Electoral Trust,Bharatiya Janata Party,21000034,party
+Progressive Electoral Trust,Biju Janata Dal,52563320,party
+Progressive Electoral Trust,Indian National Congress,99039298,party
+Progressive Electoral Trust,Janata Dal (United),5910000,party
+Progressive Electoral Trust,Jharkhand Mukti Morcha,18872439,party
+Progressive Electoral Trust,Samajwadi Party,6797000,party
+Progressive Electoral Trust,Shiv Sena,13105704,party
+Satya Electoral Trust,Bharatiya Janata Party,1072500000,party
+Satya Electoral Trust,Biju Janata Dal,2500000,party
+Satya Electoral Trust,Indian National Congress,187500000,party
+Satya Electoral Trust,Janata Dal (United),10000000,party
+Satya Electoral Trust,Lok Jan Shakti party,10000000,party
+Satya Electoral Trust,Samajwadi Party,10000000,party
+Satya Electoral Trust,Telugu Desam Party,10000000,party
+Triumph Electoral Trust,Bharatiya Janata Party,20000000,party
+Triumph Electoral Trust,Telugu Desam Party,10000000,party
+Bajaj Auto Limited,Bajaj Electoral Trust,30500000,trust
+Tube Investments of India Limited,Triumph Electoral Trust,10000000,trust
+Carborundum Universal Ltd,Triumph Electoral Trust,5285000,trust
+Cholamandalam Investment and Finance Company Ltd,Triumph Electoral Trust,5000000,trust
+Coromandel International Ltd,Triumph Electoral Trust,10000000,trust
+Unknown,General Electoral Trust,1315500000,trust
+Bharti Airtel Ltd,Satya Electoral Trust,250040000,trust
+Bharti Infratel Ltd,Satya Electoral Trust,60040000,trust
+Dhunseri Petrochem & Tea Ltd,Satya Electoral Trust,10000000,trust
+DLF Assets Pvt Ltd,Satya Electoral Trust,80050000,trust
+DLF Cyber City Developers Ltd,Satya Electoral Trust,120050000,trust
+DLF Ltd,Satya Electoral Trust,250050000,trust
+GMMCO Ltd,Satya Electoral Trust,20015000,trust
+Gujrat Fluorochemicals Ltd,Satya Electoral Trust,15000000,trust
+Hero Motocorp Limited,Satya Electoral Trust,30000000,trust
+Hero Motocorp Ltd,Satya Electoral Trust,50000000,trust
+Indiabulls Housing Finance Ltd,Satya Electoral Trust,400000000,trust
+Inox Ledget Ltd,Satya Electoral Trust,5000000,trust
+JK Fenner India Ltd,Satya Electoral Trust,4010000,trust
+JK Lakshmi Cement Ltd,Satya Electoral Trust,11015000,trust
+JK Tyre & Industries Ltd,Satya Electoral Trust,7515000,trust
+Jubilant Foodworks Ltd,Satya Electoral Trust,25000000,trust
+Kalpataru Power Transmission Ltd,Satya Electoral Trust,40000000,trust
+National Engineering Industries Limited,Satya Electoral Trust,20015000,trust
+Orient Cement Ltd,Satya Electoral Trust,20000000,trust
+Tata Chemicals Ltd,Progressive Electoral Trust,14946399,trust
+Tata Consultancy Services Ltd,Progressive Electoral Trust,14896029,trust
+Tata Global Beverages Ltd,Progressive Electoral Trust,12397645,trust
+Tata Motors Ltd,Progressive Electoral Trust,18406574,trust
+Tata Sons Ltd,Progressive Electoral Trust,47439333,trust
+Tata Steel Ltd,Progressive Electoral Trust,141345659,trust
+The Indian Hotels Company Ltd,Progressive Electoral Trust,612811,trust
+The Tata Power Company Ltd,Progressive Electoral Trust,1447632,trust
+CEAT Ltd,Janpragati Electoral Trust,13500000,trust
+KEC International Ltd,Janpragati Electoral Trust,13300000,trust
+Zensar Technologies Ltd,Janpragati Electoral Trust,13400000,trust
