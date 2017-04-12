@@ -2,10 +2,51 @@
 <html>
   <head>
     <meta charset="utf-8">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|PT+Serif:400,400i,700,700i" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/fonts/FontAwesome.otf" />
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
+
+    <div class="nav">
+      <a href="http://www.hindustantimes.com"><img class="nav-logo mobile" src="http://www.hindustantimes.com/static/common/logos/logo-mobile.png"></a>
+      <a href="http://www.hindustantimes.com"><img class="nav-logo desktop" src="http://www.hindustantimes.com/static/common/logos/logo-desktop.png"></a>
+      <div class="right-container">
+        <a href="https://www.facebook.com/sharer/sharer.php?u=http://www.hindustantimes.com/interactives/up-election-results-2017-live-data/" target="_blank"><i class="fa fa-facebook social-button" aria-hidden="true"></i></a>
+        <a href="http://twitter.com/intent/tweet?url=http://www.hindustantimes.com/interactives/up-election-results-2017-live-data/&amp;text=Map: Find out who is winning where in the 2017 UP assembly elections &amp;via=httweets&amp;hashtags=UPElection2017" target="_blank"><i class="fa fa-twitter social-button" aria-hidden="true"></i></a>
+      </div>
+    </div>
+
+    <div class="intro">
+      <h1 class="chart-title">Electoral Trusts: How some of India&rsquo;s biggest companies route money to political parties</h1>
+      <h2 class="byline">By Harry Stevens and Aman Sethi</h2>
+      <hr class="blue-line" />
+      <h2 class="dateline">12 April, 2017</h2>
+    </div>
+    <div class="copy">
+
+      <p>In recent years, electoral trust companies have emerged as a major source of funding for political parties. For the corporations that finance them, electoral trusts give an impression of an arms-length transaction, creating a buffer that allows companies to give money to parties without appearing to favour one over the other.</p>
+      <p>Between April 1, 2013, and March 31, 2016, donations from seven electoral trusts amounted to more than Rs 428 crore — amounting to about one third of all the funding disclosed by political parties in that time.</p>
+      
+    
+    </div>
+    <div id="viz-legend"></div>
     <div id="viz"></div>
+    <div class="source">
+      <p>SOURCES: Election Commission of India, contributions reports from <a href="http://eci.nic.in/eci_main1/PolPar/electoral_trust_2013-14.aspx">2013</a>, <a href="http://eci.nic.in/eci_main1/PolPar/electoral_trust_2014-15.aspx">2014</a>, and <a href="http://eci.nic.in/eci_main1/PolPar/electoral_trust_2015-16.aspx">2015</a>. Association for Democratic Reforms, <a href="http://myneta.info/party/">political parties database</a>. This chart shows contributions to and expenditures by electoral trusts from April 1, 2013 until March 31, 2016.</p>
+      <p>* General Electoral Trust&rsquo;s contribution report is not available on the Election Commission of India&rsquo;s website. However, political parties to which it has contributed list its address as the Aditya Birla Centre in Mumbai. That address is shared by the <a href="http://www.adityabirla.com/contact">Aditya Birla Group</a>. In FY 2015-16, General Electoral Trust stopped making donations, and a trust called Samaj Electoral Trust, funded by a raft of companies with addresses linked to the Birla Group, began making contributions. 
+    </div> 
+
+
+    <div class="copy">
+      <p>Some of the country&rsquo;s largest and most influential corporate conglomerates &mdash; from Bharti and Birla to Tata and Torrent &mdash; bankroll these trusts. Together, they represent a broad swath of corporate India invested in highly regulated sectors where seemingly minor changes in policy can have a disproportionate impact on balance sheets.</p> 
+      <p>
+
+
+    </div>
+
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="http://www.hindustantimes.com/static/common/js/d3.moveto.js"></script>
     <script src="https://unpkg.com/d3-sankey@0"></script>

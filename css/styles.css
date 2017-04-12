@@ -1,6 +1,110 @@
+body,html {
+	max-width: 100%;
+	overflow-x: hidden;
+}
 body {
   margin: 0;
   font-family: "Open Sans", sans-serif;
+}
+a {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+h1,h2,h3 {
+	font-family: "PT Serif", serif;
+	text-align: center;
+}
+
+
+/*NAV*/
+.nav {
+	color: #fff;
+	height: 34px;
+	background-color: #262626;
+	width: 100%;
+	padding: .2em;
+	z-index: 10000;
+}
+.nav a {
+	color: inherit;
+}
+.nav .nav-logo {
+	padding-left: .3em;
+	vertical-align: middle;
+	height: 60%;
+	margin-top: 4px;
+}
+.nav .nav-logo.mobile {
+	display: none;
+}
+.nav .nav-logo.desktop {
+	vertical-align: middle;
+	display: inline-block;
+}
+.nav .right-container {
+	position: absolute;
+	right: 28px;
+	top: 4px;
+	font-size: 1.4em;
+}
+.nav .right-container i {
+	margin-left: 8px;
+}
+
+/*TIP*/
+.tip {
+	background: #fff;
+	padding: 10px;
+	border: 1px solid #ddd;
+	position: absolute;
+}
+.tip .title {
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+.tip .row {
+	font-size: .8em;
+	margin-top: 2px;
+}
+
+.intro {
+	font-family: "PT Serif", serif;
+	max-width: 750px;
+	margin: 0 auto;
+	padding: 0 10px;
+}
+.intro h1 {
+	font-size: 2em;
+	margin-bottom: 40px;
+}
+.intro h2 {
+	margin: 0px;
+}
+.intro h2.byline {
+	font-weight: normal;
+	font-size: 1.3em;
+}
+.intro h2.dateline {
+	font-weight: normal;
+	font-size: 1.1em;
+}
+.blue-line {
+  width: 220px;
+  margin: .8em auto;
+  border: 2px solid #48a2d7;
+}
+
+.copy {
+	font-family: "PT Serif", serif;
+	max-width: 600px;
+	margin: 40px auto;
+	font-size: 1.1em;
+	line-height: 1.5em;
+}
+.copy p {
+	margin-bottom: 22px;
 }
 
 .node rect {
@@ -16,4 +120,30 @@ body {
 .link {
   fill: none;
   stroke: #000;
+}
+
+.top-label {
+	font-weight: bold;
+}
+.top-label tspan {
+	font-weight: normal;
+}
+
+.source {
+	margin: 10px;
+	color: #888;
+	font-size: .8em;
+}
+
+@media (max-width:768px) {
+	/*nav*/
+	.nav .nav-logo.mobile {
+		display: inline-block;
+	}
+	.nav .nav-logo.desktop {
+		display: none;
+	}
+	.nav .right-container {
+		right: 14px;
+	}
 }
