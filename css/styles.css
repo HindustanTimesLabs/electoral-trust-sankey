@@ -53,16 +53,36 @@ h1,h2,h3 {
 	margin-left: 8px;
 }
 
+.link.unknown {
+	display: none;
+}
+.node.unknown {
+	display: none;
+}
+
 /*TIP*/
 .tip {
 	background: #fff;
-	padding: 10px;
+	padding: 5px 10px;
+	box-shadow: 2px 2px 6px rgba(0, 0, 0, .5);
 	border: 1px solid #ddd;
 	position: absolute;
 }
+/*.tip:after {
+	position: absolute;
+	top: 100%;
+	margin-left: 45%;
+	content: '';
+	width: 0;
+	height: 0;
+	border-top: solid 10px #fff;
+	border-left: solid 10px transparent;
+	border-right: solid 10px transparent;
+}*/
 .tip .title {
 	font-weight: bold;
-	margin-bottom: 10px;
+	margin-bottom: 5px;
+	font-size: .9em;
 }
 .tip .row {
 	font-size: .8em;
@@ -108,7 +128,7 @@ h1,h2,h3 {
 }
 
 .node rect {
-  cursor: move;
+  /*cursor: move;*/
   fill-opacity: .9;
   shape-rendering: crispEdges;
 }

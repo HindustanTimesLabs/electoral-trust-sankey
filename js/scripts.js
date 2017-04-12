@@ -184,10 +184,15 @@ function draw(){
             d3.select(this)
                 .style("stroke-opacity", opacity.mouseover)
                 .moveToFront();
+
+            
           })
+          .on("mousemove", tipShow_link)
           .on("mouseout", function(d){
             d3.selectAll(".link")
-                .style("stroke-opacity", opacity.mouseout)
+                .style("stroke-opacity", opacity.mouseout);
+
+            tipHide();
                 
           })
 
@@ -201,18 +206,18 @@ function draw(){
       var node = svg.append("g").selectAll(".node")
           .data(nodes)
         .enter().append("g")
-          .attr("class", "node")
+          .attr("class", function(d){ return "node " + slugify(d.name); })
           .attr("transform", function(d) { 
             return "translate(" + d.x + "," + d.y + ")"; 
           })
-          .call(d3.drag()
-            .subject(function(d) {
-              return d;
-            })
-            .on("start", function() {
-              this.parentNode.appendChild(this);
-            })
-            .on("drag", dragmove));
+          // .call(d3.drag()
+          //   .subject(function(d) {
+          //     return d;
+          //   })
+          //   .on("start", function() {
+          //     this.parentNode.appendChild(this);
+          //   })
+          //   .on("drag", dragmove));
 
       // add the rectangles for the nodes
       node.append("rect")
@@ -271,7 +276,7 @@ function draw(){
               .style("stroke-opacity", opacity.mouseover)
               .moveToFront();
 
-          tipShow(d, type);
+          tipShow_node(d, type);
 
         })
         .on("mouseout", function(d){
@@ -302,27 +307,74 @@ function draw(){
       }
 
       // draw the tip
-      function tipShow(d, type){
+      function tipShow_link(d){
+        $(".tip").empty();
+        $(".tip").show();
+        
+        // populate the tip
+        $(".tip").append("<div class='row'><b>" + d.source.name + "</b> gave <b>Rs " + numberLakhs(d.value) + "</b> to <b>" + d.target.name + "</b>.</div>");
+
+        // place the tip
+        var tip_width = $(".tip").width();
+        var tip_height = $(".tip").height();
+        // tip_height = tip_height > 90 ? tip_height - 36 : tip_height; // magic number stuff
+        var viz_offset = $("#viz").offset().top;
+
+        var coordinates = [0, 0];
+        coordinates = d3.mouse(this);
+        var x = coordinates[0];
+        var y = coordinates[1];
+
+        var tip_left = x - (tip_width / 2);
+
+        // so it doesn't fall off the side
+        if (tip_left <= margin.left){
+          tip_left = margin.left;
+        } else if (tip_left + tip_width >= width - margin.right){
+          tip_left = width - margin.right - tip_width;
+        }        
+
+        var tip_top = y + viz_offset - tip_height + (margin.top / 2);
+
+        $(".tip").css({
+          left: tip_left,
+          top: tip_top
+        });
+
+      }
+
+      function tipShow_node(d, type){
 
         $(".tip").show();
 
         // populate the tip
         $(".tip").append("<div class='title'>" + d.name + "</div>");
 
-        var total_raised = d3.sum(d.targetLinks, function(c){ return c.value; });
-        var total_spent = d3.sum(d.sourceLinks, function(c){ return c.value; });
-
-        $(".tip").append("<div class='row'>Raised <b>Rs " + numberLakhs(total_raised) + "</b> from <b>" + d.targetLinks.length + " " + (d.targetLinks.length == 1 ? "company" : "companies") + "</b>.</div>");
-        $(".tip").append("<div class='row'>Gave <b>Rs " + numberLakhs(total_spent) + "</b> to <b>" + d.sourceLinks.length + " political " + (d.sourceLinks.length == 1 ? "party" : "parties") + "</b>.</div>");
-
+        if (type == "trust"){
+          var total_raised = d3.sum(d.targetLinks, function(c){ return c.value; });
+          var total_spent = d3.sum(d.sourceLinks, function(c){ return c.value; });
+          
+          if (d.name != "General Electoral Trust"){
+            $(".tip").append("<div class='row'>Received <b>Rs " + numberLakhs(total_raised) + "</b> from <b>" + d.targetLinks.length + " " + (d.targetLinks.length == 1 ? "company" : "companies") + "</b>.</div>");
+          }
+          $(".tip").append("<div class='row'>Gave <b>Rs " + numberLakhs(total_spent) + "</b> to <b>" + d.sourceLinks.length + " political " + (d.sourceLinks.length == 1 ? "party" : "parties") + "</b>.</div>");
+        } else if (type == "company"){
+          var total_spent = d3.sum(d.sourceLinks, function(c){ return c.value; });
+          $(".tip").append("<div class='row'>Gave <b>Rs " + numberLakhs(total_spent) + "</b> to <b>" + d.sourceLinks[0].target.name + "</b>.</div>");
+        } else if (type == "party"){
+          var total_raised = d3.sum(d.targetLinks, function(c){ return c.value; });
+          $(".tip").append("<div class='row'>Received <b>Rs " + numberLakhs(total_raised) + "</b> from <b>" + d.targetLinks.length + " " + (d.targetLinks.length == 1 ? "trust" : "trusts") + "</b>.</div>");
+        }
         // place the tip
         var tip_width = $(".tip").width();
         var tip_height = $(".tip").height();
+        tip_height = tip_height > 90 ? tip_height - 36 : tip_height; // magic number stuff
         var viz_offset = $("#viz").offset().top;
 
 
-        var tip_left = d.x - (tip_width / 2);
-        var tip_top = d.y - tip_height + viz_offset + (margin.top / 2) - 10;
+        var tip_left = type == "trust" ? d.x - (tip_width / 2) : type == "company" ? margin.left : type == "party" ? width - margin.right - tip_width : null;
+        
+        let tip_top = d.y - tip_height + viz_offset + (margin.top / 2);
 
         $(".tip").css({
           left: tip_left,
