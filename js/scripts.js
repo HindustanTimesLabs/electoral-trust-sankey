@@ -1,20 +1,52 @@
-var opacity = {mouseover: 1, mouseout: .4}
+// magic numbers
+var opacity = {mouseover: 1, mouseout: .4};
 
 window.onload = draw;
 $(window).smartresize(draw);
 
 function draw(){
+  var ww = $(window).width();
+  var switcher = ww <= 768 ? "mobile" : "desktop";
 
+  // reinitialize the tip
   $(".tip").remove();
   $("body").append("<div class='tip'></div>");
   $(".tip").hide();
 
-  $("#viz").empty();
+  // here are the divs and info about them
+  var divs = {
+    desktop: [
+      {
+        name: "viz",
+        data: "csv_all",
+      }
+    ],
+    mobile: [
+      {
+        name: "viz-mob-1",
+        data: "mob_1",
+      }, {
+        name: "viz-mob-2",
+        data: "mob_2",
+      }
+    ]
+  };
+
+  var resp_divs = divs[switcher];
+
+  resp_divs.forEach(function(d){
+    $("#" + d.name).empty();
+  });
+
+  // things that will become object literals
+  // * margin?
+  // * svg
+  // * path
 
   // set the dimensions and margins of the graph
-  var margin = {top: 50, right: 10, bottom: 10, left: 10},
+  var margin = {top: switcher == "desktop" ? 50 : 20, right: 10, bottom: 10, left: 10},
       width = window.innerWidth - margin.left - margin.right,
-      height = 700 - margin.top - margin.bottom;
+      height = (switcher == "desktop" ? 700 : 500) - margin.top - margin.bottom;
 
   // format variables
   var formatNumber = d3.format(",.0f"),    // zero decimal places
@@ -39,12 +71,20 @@ function draw(){
       };
 
   // append the svg object to the body of the page
-  var svg = d3.select("#viz").append("svg")
+  var svg = {
+
+  };
+
+  resp_divs.forEach(function(d){
+
+    svg[d.name] = d3.select("#" + d.name).append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
       .attr("transform", 
             "translate(" + margin.left + "," + margin.top + ")");
+
+  });
 
   // Set the sankey diagram properties
   var sankey = d3.sankey()
@@ -54,26 +94,18 @@ function draw(){
 
   var path = sankey.link();
 
-  // load the data
-  d3.queue()
-      .defer(d3.csv, "sankey_13-14.csv")
-      .defer(d3.csv, "sankey_14-15.csv")
-      .defer(d3.csv, "sankey_15-16.csv")
-      .defer(d3.csv, "sankey_all.csv")
-      .await(ready);
-
   // draw the labels on top
   var top_labels = [
     {
       text: "Companies",
       x: 0,
       achor: "start",
-      tspan: " give money to..."
+      tspan: " gave money to..."
     }, {
       text: "...electoral trusts",
       x: width / 2,
       anchor: "middle",
-      tspan: ", which give money to..."
+      tspan: ", which gave money to..."
     }, {
       text: "...political parties.",
       x: width,
@@ -82,7 +114,8 @@ function draw(){
     }
   ]
 
-  svg.selectAll(".top-label")
+  resp_divs.forEach(function(d){
+    svg[d.name].selectAll(".top-label")
       .data(top_labels)
     .enter()
       .append("text")
@@ -93,13 +126,38 @@ function draw(){
       .text(function(d){ return d.text; })
     .append("tspan")
       .text(function(d){ return d.tspan; });
-      
+  });
 
-  function ready(error, csv_13, csv_14, csv_15, csv_all){
 
-    makeChart(csv_all);
+    
+  // load the data
+  d3.queue()
+      .defer(d3.csv, "sankey_all.csv")
+      .await(ready);
+   
 
-    function makeChart(csv){
+  function ready(error, csv_all){
+
+    var data_wrap = {
+      csv_all: csv_all,
+      mob_1: csv_all.filter(function(d){
+        return d.recipient_type == "trust";
+      }),
+      mob_2: csv_all.filter(function(d){
+        return d.recipient_type == "party";
+      })
+    }
+
+    resp_divs.forEach(function(d){
+      makeChart(d);
+    });
+
+    // makeChart(csv_all);
+
+    function makeChart(this_div){
+
+      var csv = data_wrap[this_div.data];
+
       // create an array to push all sources and targets, before making them unique
       var arr = [];
       csv.forEach(function(d){
@@ -108,6 +166,31 @@ function draw(){
         arr.push(d.target);
 
       });
+
+      // create the dropown
+      // $("#dropdown").append("<option></option>")
+
+      // arr.filter(onlyUnique).sort().forEach(function(d){
+      //   $("#dropdown").append("<option value='" + slugify(d) + "'>" + d + "</option>")  
+      // });
+
+      // $("#dropdown").chosen({
+      //   allow_single_deselect: true
+      // }).change(function(){
+      //   var val = $(this).val();
+
+      //   if (val == ""){
+      //     d3.selectAll(".link")
+      //         .style("stroke-opacity", opacity.mouseout);
+
+      //     tipHide();
+      //   } else {
+      //     d3.selectAll(".link." + val)
+      //         .style("stroke-opacity", opacity.mouseover);
+      //   }
+        
+      // });
+      
 
       // create nodes array
       var nodes = arr.filter(onlyUnique).map(function(d,i){
@@ -157,7 +240,7 @@ function draw(){
       });
 
       // add in the links
-      var link = svg.append("g").selectAll(".link")
+      var link = svg[this_div.name].append("g").selectAll(".link")
           .data(links)
         .enter().append("path")
           .attr("class", function(d){
@@ -181,47 +264,59 @@ function draw(){
 
       link
           .on("mouseover", function(d){
-            d3.select(this)
+            if (d.source.name == "Unknown"){
+              
+            } else {
+              d3.select(this)
                 .style("stroke-opacity", opacity.mouseover)
                 .moveToFront();
-
+            }
             
           })
-          .on("mousemove", tipShow_link)
+          .on("mousemove", function(d){
+
+            if (d.source.name == "Unknown"){
+              tipHide();
+            } else {
+
+              var coordinates = [0, 0];
+              coordinates = d3.mouse(this);
+              var x = coordinates[0];
+              var y = coordinates[1];
+
+              tipShow_link(d, x, y);
+            }
+            
+          })
           .on("mouseout", function(d){
             d3.selectAll(".link")
                 .style("stroke-opacity", opacity.mouseout);
 
             tipHide();
                 
-          })
+          });
 
-      // add the link titles
-      // link.append("title")
-      //       .text(function(d) {
-      //       return d.source.name + " → " + 
-      //               d.target.name + "\n" + format(d.value); });
+      // hide the tip on mobile
+      $(document).on("click touchstart", ".tip", function(){
+        d3.selectAll(".link")
+            .style("stroke-opacity", opacity.mouseout);
+
+        tipHide();
+      });
+      
 
       // add in the nodes
-      var node = svg.append("g").selectAll(".node")
+      var node = svg[this_div.name].append("g").selectAll(".node")
           .data(nodes)
         .enter().append("g")
           .attr("class", function(d){ return "node " + slugify(d.name); })
           .attr("transform", function(d) { 
             return "translate(" + d.x + "," + d.y + ")"; 
-          })
-          // .call(d3.drag()
-          //   .subject(function(d) {
-          //     return d;
-          //   })
-          //   .on("start", function() {
-          //     this.parentNode.appendChild(this);
-          //   })
-          //   .on("drag", dragmove));
+          });
 
       // add the rectangles for the nodes
       node.append("rect")
-          .attr("height", function(d) { return d.dy < 0 ? .5 : d.dy; })
+          .attr("height", function(d) { return d.dy <= 2 ? 2 : d.dy; })
           .attr("width", sankey.nodeWidth())
           .style("fill", function(d) { 
             var type = getType(d.name);
@@ -231,17 +326,22 @@ function draw(){
             } else if (type == "company"){
               return d.color = color(d.sourceLinks[0].target.name.replace(/ .*/, ""));
             } else {
-              return d.color = "#ccc"
+              if (switcher == "desktop"){
+                return d.color = "#ccc"
+              } else {
+                if (d.name.indexOf("Trust") == -1){
+                  return d.color = "#ccc"
+                } else {
+                  return color(d.name.replace(/ .*/, ""));
+                }
+              }
             }
             
           })
           .style("stroke", function(d) { 
             return d3.rgb(d.color).darker(.3); 
           })
-        // .append("title")
-        //   .text(function(d) { 
-        //     return d.name + "\n" + format(d.value); 
-        //   });
+        
 
       // add in the title for the nodes
       node.append("text")
@@ -254,10 +354,10 @@ function draw(){
             var type = getType(d.name);
 
             if (type == "trust"){
-              return ".9em";
+              return switcher == "desktop" ? ".9em" : ".7em";
             } else {
               if (d.dy >= 25){
-                return ".8em"
+                return ".7em"
               } else {
                 return ".6em";  
               }
@@ -272,12 +372,19 @@ function draw(){
         .on("mouseover", function(d){
           var type = getType(d.name);
 
-          d3.selectAll(".link." + slugify(d.name))
+          if (d.name == "Unknown" && type == "company"){
+            tipHide()
+          } else {
+            tipShow_node(d, type);
+
+            d3.selectAll(".link." + slugify(d.name))
               .style("stroke-opacity", opacity.mouseover)
               .moveToFront();
 
-          tipShow_node(d, type);
-
+            d3.selectAll(".link.unknown")
+              .style("stroke-opacity", opacity.mouseout);
+          }
+          
         })
         .on("mouseout", function(d){
           d3.selectAll(".link")
@@ -306,24 +413,25 @@ function draw(){
         })[0].type;
       }
 
+      // more magic numbers
+      var tip_top_subtract = switcher == "desktop" ? 0 : 10;
+
       // draw the tip
-      function tipShow_link(d){
+      function tipShow_link(d, x, y){
+        
         $(".tip").empty();
         $(".tip").show();
         
+        $(".tip").append("<div class='mobile-only tip-x'><i class='fa fa-times' aria-hidden='true'></i></div>")
+
         // populate the tip
-        $(".tip").append("<div class='row'><b>" + d.source.name + "</b> gave <b>Rs " + numberLakhs(d.value) + "</b> to <b>" + d.target.name + "</b>.</div>");
+        $(".tip").append("<div class='tip-row'><b>" + d.source.name + "</b> gave <b>Rs " + numberLakhs(d.value) + "</b> to <b>" + d.target.name + "</b>.</div>");
 
         // place the tip
         var tip_width = $(".tip").width();
         var tip_height = $(".tip").height();
         // tip_height = tip_height > 90 ? tip_height - 36 : tip_height; // magic number stuff
-        var viz_offset = $("#viz").offset().top;
-
-        var coordinates = [0, 0];
-        coordinates = d3.mouse(this);
-        var x = coordinates[0];
-        var y = coordinates[1];
+        var viz_offset = $("#" + this_div.name).offset().top;
 
         var tip_left = x - (tip_width / 2);
 
@@ -334,12 +442,14 @@ function draw(){
           tip_left = width - margin.right - tip_width;
         }        
 
-        var tip_top = y + viz_offset - tip_height + (margin.top / 2);
+        var tip_top = y + viz_offset - tip_height + (margin.top / 2) - tip_top_subtract;
 
         $(".tip").css({
-          left: tip_left,
-          top: tip_top
+          left: (switcher == "desktop" ? tip_left : 0),
+          top: tip_top,
+          width: (switcher == "desktop" ? "auto" : ww),
         });
+
 
       }
 
@@ -348,37 +458,43 @@ function draw(){
         $(".tip").show();
 
         // populate the tip
+        $(".tip").append("<div class='mobile-only tip-x'><i class='fa fa-times' aria-hidden='true'></i></div>")
+
         $(".tip").append("<div class='title'>" + d.name + "</div>");
 
         if (type == "trust"){
           var total_raised = d3.sum(d.targetLinks, function(c){ return c.value; });
           var total_spent = d3.sum(d.sourceLinks, function(c){ return c.value; });
           
-          if (d.name != "General Electoral Trust"){
-            $(".tip").append("<div class='row'>Received <b>Rs " + numberLakhs(total_raised) + "</b> from <b>" + d.targetLinks.length + " " + (d.targetLinks.length == 1 ? "company" : "companies") + "</b>.</div>");
+          if (d.name != "General Electoral Trust" && switcher == "desktop"){
+            $(".tip").append("<div class='tip-row'>Received <b>Rs " + numberLakhs(total_raised) + "</b> from <b>" + d.targetLinks.length + " " + (d.targetLinks.length == 1 ? "company" : "companies") + "</b>.</div>");
           }
-          $(".tip").append("<div class='row'>Gave <b>Rs " + numberLakhs(total_spent) + "</b> to <b>" + d.sourceLinks.length + " political " + (d.sourceLinks.length == 1 ? "party" : "parties") + "</b>.</div>");
+          $(".tip").append("<div class='tip-row'>Gave <b>Rs " + numberLakhs(total_spent) + "</b> to <b>" + d.sourceLinks.length + " political " + (d.sourceLinks.length == 1 ? "party" : "parties") + "</b>.</div>");
         } else if (type == "company"){
           var total_spent = d3.sum(d.sourceLinks, function(c){ return c.value; });
-          $(".tip").append("<div class='row'>Gave <b>Rs " + numberLakhs(total_spent) + "</b> to <b>" + d.sourceLinks[0].target.name + "</b>.</div>");
+          $(".tip").append("<div class='tip-row'>Gave <b>Rs " + numberLakhs(total_spent) + "</b> to <b>" + d.sourceLinks[0].target.name + "</b>.</div>");
         } else if (type == "party"){
           var total_raised = d3.sum(d.targetLinks, function(c){ return c.value; });
-          $(".tip").append("<div class='row'>Received <b>Rs " + numberLakhs(total_raised) + "</b> from <b>" + d.targetLinks.length + " " + (d.targetLinks.length == 1 ? "trust" : "trusts") + "</b>.</div>");
+
+          if (d.name != "General Electoral Trust"){
+            $(".tip").append("<div class='tip-row'>Received <b>Rs " + numberLakhs(total_raised) + "</b> from <b>" + d.targetLinks.length + " " + (d.targetLinks.length == 1 ? switcher == "desktop" ? "trust" : "company" : switcher == "desktop" ? "trusts" : "companies") + "</b>.</div>");
+          }
         }
         // place the tip
         var tip_width = $(".tip").width();
         var tip_height = $(".tip").height();
         tip_height = tip_height > 90 ? tip_height - 36 : tip_height; // magic number stuff
-        var viz_offset = $("#viz").offset().top;
+        var viz_offset = $("#" + this_div.name).offset().top;
 
 
         var tip_left = type == "trust" ? d.x - (tip_width / 2) : type == "company" ? margin.left : type == "party" ? width - margin.right - tip_width : null;
         
-        let tip_top = d.y - tip_height + viz_offset + (margin.top / 2);
+        var tip_top = d.y - tip_height + viz_offset + (margin.top / 2) - tip_top_subtract;
 
         $(".tip").css({
-          left: tip_left,
-          top: tip_top
+          left: switcher == "desktop" ? tip_left : 0,
+          top: tip_top,
+          width: switcher == "desktop" ? "auto" : ww,
         });
 
       }
