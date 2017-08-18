@@ -1,0 +1,28 @@
+{
+  "name": "electoral-trust-sankey",
+  "version": "1.0.0",
+  "description": "Electoral Trusts: How some of India’s biggest companies route money to political parties",
+  "main": "index.js",
+  "scripts": {
+    "minify": "yuicompressor css/styles.css -o css/styles.min.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HindustanTimesLabs/electoral-trust-sankey.git"
+  },
+  "keywords": [
+    "india",
+    "politics",
+    "finance"
+  ],
+  "author": "Harry Stevens <harryjosephstevens@gmail.com> (http://harryjstevens.com/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HindustanTimesLabs/electoral-trust-sankey/issues"
+  },
+  "homepage": "https://github.com/HindustanTimesLabs/electoral-trust-sankey#readme",
+  "devDependencies": {
+    "uglifyjs": "^2.4.11",
+    "yuicompressor": "^2.4.8"
+  }
+}
